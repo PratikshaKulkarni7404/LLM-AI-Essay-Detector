@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | AI Essay Detector</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 40%, #cce5ff);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        color: #333;
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background-color: #5fa8f1; /* Dark Blue */
+        color: white;
+        padding: 15px;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .item {
+        position: relative;
+        left:1200px;
+        border-radius: 3px;
+      }
+
+      .navbar h2 {
+        margin: 0px;
+        font-size: 26px;
+      }
+
+      .navbar nav {
+        display: flex;
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 18px;
+      }
+      .item:hover {
+        color: #151514;
+        background-color: #eaf0f7;
+        width: 40px;
+        height: 10px;
+      }
+      /* Sidebar Styling */
+      .main-container {
+        display: flex;
+        flex: 1;
+        width: 90%;
+        max-width: 1200px;
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+      }
+
+      .sidebar {
+        width: 200px;
+        background-color: #1d60a3; /* Navy Blue */
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar a {
+        color: white;
+        text-decoration: none;
+        padding: 12px 15px;
+        margin-bottom: 12px;
+        border-radius: 5px;
+        background-color: transparent;
+        transition: background-color 0.3s, color 0.3s;
+        width: 90%;
+      }
+
+      .sidebar a:hover {
+        background-color: #ffcc00; /* Yellow Hover */
+        color: #001f3f; /* Navy Blue Text on Hover */
+      }
+
+      .container {
+        flex: 1;
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      h1 {
+        color: #003366; /* Dark Blue for Headers */
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
+
+      label {
+        font-size: 16px;
+        color: #555;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus,
+      textarea:focus {
+        border-color: #003366;
+        outline: none;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      input[type="submit"] {
+        background-color: #1d60a3; /* Dark Blue for Submit Button */
+        color: white;
+        border: none;
+        padding: 15px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #001f3f; /* Darker Blue on Hover */
+      }
+
+      .switch-link {
+        text-align: center;
+        color: #0559ac;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      /* Chart Container Styling */
+      #chart-container {
+        width: 100%;
+        height: 300px;
+        margin-top: 20px;
+        display: none; /* Initially hidden */
+        position: relative;
+        left: 120px;
+      }
+
+      @media (max-width: 800px) {
+        .navbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .main-container {
+          flex-direction: column;
+          width: 100%;
+          margin: 20px 0;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+
+        .container {
+          padding: 20px;
+        }
+      }
+      .navbar img{
+            width: 30px;
+            position: relative;
+            left:20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="#"><img src="ED.jpg" alt=""></a>
+      <a href="#">AI Essay Detector</a>
+      <a href="http://127.0.0.1:5500/home.html" class="item">Home</a>
+      <a href="http://127.0.0.1:5500/about.html" class="item">About Us</a>
+      <a href="http://127.0.0.1:5500/contact.html" class="item">Contact Us</a>
+      <a href="http://127.0.0.1:5500/help.html" class="item">Help & Support</a>
+    </div>
+
+    <div class="main-container">
+      <div class="sidebar">
+        <a href="#" onclick="showRegister()">Register</a>
+        <a href="#" onclick="showLogin()">Login</a>
+        <a href="#" onclick="showDashboard()">Dashboard</a>
+        <a href="#" onclick="showSettings()">Settings</a>
+        <a href="#" onclick="showFeedback()">Feedback</a>
+      </div>
+
+      <div class="container">
+        <div id="register-page" style="display: none">
+          <h1>Register</h1>
+          <form id="register-form">
+            <label for="register-username">Username:</label>
+            <input
+              type="text"
+              id="register-username"
+              name="username"
+              required
+            />
+
+            <label for="register-password">Password:</label>
+            <input
+              type="password"
+              id="register-password"
+              name="password"
+              required
+            />
+
+            <input type="submit" value="Register" />
+          </form>
+          <p class="switch-link" onclick="showLogin()">
+            Already have an account? Login
+          </p>
+        </div>
+
+        <div id="login-page">
+          <h1>Login</h1>
+          <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <input type="submit" value="Login" />
+          </form>
+          <p class="switch-link" onclick="showRegister()">
+            Don't have an account? Register
+          </p>
+        </div>
+
+        <div id="essay-page" style="display: none">
+          <h1>Submit Your Essay</h1>
+          <form id="essay-form">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="topic">Essay Topic:</label>
+            <input type="text" id="topic" name="topic" required />
+
+            <label for="essay">Enter Essay:</label>
+            <textarea id="essay" name="essay" rows="10" required></textarea>
+
+            <input type="submit" value="Submit Essay" />
+          </form>
+          <p id="result"></p>
+        </div>
+
+        <div id="dashboard-page" style="display: none">
+          <h1>Dashboard</h1>
+          <div id="chart-container">
+            <canvas id="accuracyChart"></canvas>
+          </div>
+        </div>
+
+        <div id="settings-page" style="display: none">
+          <h1>Settings</h1>
+          <form id="settings-form">
+            <label for="setting-username">Change Username:</label>
+            <input type="text" id="setting-username" name="setting-username" />
+
+            <label for="setting-password">Change Password:</label>
+            <input
+              type="password"
+              id="setting-password"
+              name="setting-password"
+            />
+
+            <input type="submit" value="Save Changes" />
+          </form>
+        </div>
+
+        <div id="feedback-page" style="display: none">
+          <h1>Feedback</h1>
+          <form id="feedback-form">
+            <label for="feedback">Your Feedback:</label>
+            <textarea
+              id="feedback"
+              name="feedback"
+              rows="5"
+              required
+            ></textarea>
+
+            <input type="submit" value="Submit Feedback" />
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Function to show the registration page
+      function showRegister() {
+        hideAllPages();
+        document.getElementById("register-page").style.display = "block";
+      }
+
+      // Function to show the login page
+      function showLogin() {
+        hideAllPages();
+        document.getElementById("login-page").style.display = "block";
+      }
+
+      // Function to show the essay page
+      function showEssayPage() {
+        hideAllPages();
+        document.getElementById("essay-page").style.display = "block";
+      }
+
+      // Function to show the dashboard page
+      function showDashboard() {
+        hideAllPages();
+        document.getElementById("dashboard-page").style.display = "block";
+        document.getElementById("chart-container").style.display = "block"; // Show chart
+      }
+
+      // Function to show the settings page
+      function showSettings() {
+        hideAllPages();
+        document.getElementById("settings-page").style.display = "block";
+      }
+
+      // Function to show the feedback page
+      function showFeedback() {
+        hideAllPages();
+        document.getElementById("feedback-page").style.display = "block";
+      }
+
+      // Function to hide all pages
+      function hideAllPages() {
+        document.getElementById("register-page").style.display = "none";
+        document.getElementById("login-page").style.display = "none";
+        document.getElementById("essay-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "none";
+        document.getElementById("settings-page").style.display = "none";
+        document.getElementById("feedback-page").style.display = "none";
+        document.getElementById("chart-container").style.display = "none"; // Hide chart
+      }
+
+      // Registration form handler
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const username = document.getElementById("register-username").value;
+          const password = document.getElementById("register-password").value;
+
+          localStorage.setItem("username", username);
+          localStorage.setItem("password", password);
+
+          alert("Registration successful! You can now log in.");
+          showLogin();
+        });
+
+      // Login form handler
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          const storedUsername = localStorage.getItem("username");
+          const storedPassword = localStorage.getItem("password");
+
+          if (username === storedUsername && password === storedPassword) {
+            showEssayPage(); // Change this to show dashboard if needed
+          } else {
+            alert("Invalid username or password!");
+          }
+        });
+
+      // Essay form submission
+      document
+        .getElementById("essay-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const topic = document.getElementById("topic").value;
+          const essay = document.getElementById("essay").value;
+
+          const result = detectEssay(essay);
+          document.getElementById(
+            "result"
+          ).innerText = `Essay has been detected as: ${result}`;
+
+          fetch("process.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ name, topic, essay, result }),
+          });
+        });
+
+      // Detect if an essay is AI-generated
+      function detectEssay(text) {
+        text = text.toLowerCase();
+        const aiPatterns = [
+          "as an ai language model",
+          "i am programmed",
+          "based on machine learning",
+          "my training data",
+          "neural networks",
+          "as an artificial intelligence",
+          "i do not have personal experiences",
+        ];
+
+        for (let pattern of aiPatterns) {
+          if (text.includes(pattern)) return "AI-Generated";
+        }
+
+        const wordCount = text.split(/\s+/).length;
+        return wordCount < 100 ? "Short Essay" : "Human-Written";
+      }
+
+      // Chart.js for accuracy display
+      const ctx = document.getElementById("accuracyChart").getContext("2d");
+      const accuracyChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+          datasets: [
+            {
+              label: "Detection Accuracy (%)",
+              data: [75, 80, 85, 90], // Example accuracy data
+              backgroundColor: "#518eca",
+              borderColor: "rgba(76, 175, 80, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              title: {
+                display: true,
+                text: "Accuracy (%)",
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Weeks",
+              },
+            },
+          },
+        },
+      });
+
+      // Initially show login page
+      showLogin();
+    </script>
+  </body>
+</html>
