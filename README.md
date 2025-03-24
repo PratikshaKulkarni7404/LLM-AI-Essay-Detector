@@ -25,4 +25,4 @@ https://github.com/PratikshaKulkarni7404/LLM-AI-Essay-Detector/issues/2#issue-29
 
 1. Clone the repository:  
    ```sh
-   git clone https://github.com/your-username/ai-text-detector.git
+   git clone [https://github.com/your-username/ai-text-detector.git](https://github.com/PratikshaKulkarni7404/LLM-AI-Essay-Detector)
