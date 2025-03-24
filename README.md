@@ -20,8 +20,7 @@ A web-based application that detects whether a given text is AI-generated. The t
 - MySQL for storing submitted essays and their analysis results
 
 ## Screenshots
-
-
+https://github.com/PratikshaKulkarni7404/LLM-AI-Essay-Detector/issues/2#issue-2943240951
 ## Installation  
 
 1. Clone the repository:  
